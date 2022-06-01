@@ -1,0 +1,49 @@
+name: "Terraform"
+
+on:
+  workflow_dispatch:
+    branches: [main, users/**]
+    inputs:
+      secondsRunning:
+        description: "Seconds running experiment"
+        required: true
+        default: "120"
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: self-hosted
+    
+    env:
+      ARM_CLIENT_ID: "d602a82d-069f-4871-a122-b13e7aa4f725"
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: "35036c9b-8924-4dc1-a7ab-d7af1c74d0b3"
+      ARM_TENANT_ID: "35595a02-4d6d-44ac-99e1-f9ab4cd872db"
+      TF_VAR_SECONDS: ${{github.event.inputs.secondsRunning }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false
+
+      - name: Terraform State
+        run: terraform state rm restapi_object.Start-Experiment restapi_object.Stop-Experiment azurerm_resource_group_template_deployment.enable-capability azurerm_resource_group_template_deployment.set-target
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false
