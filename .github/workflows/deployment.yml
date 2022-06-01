@@ -12,7 +12,7 @@ on:
 jobs:
   terraform:
     name: "Terraform"
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     
     env:
       ARM_CLIENT_ID: "d602a82d-069f-4871-a122-b13e7aa4f725"
@@ -29,21 +29,16 @@ jobs:
         id: init
         run: terraform init
         
-      
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-        
-
+      
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false
         
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
-
-      - name: Terraform State
-        run: terraform state rm restapi_object.Start-Experiment restapi_object.Stop-Experiment azurerm_resource_group_template_deployment.enable-capability azurerm_resource_group_template_deployment.set-target
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -input=false

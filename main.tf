@@ -21,17 +21,16 @@ locals {
 
 }
 
-//Input variable experiment running duration
-variable "SECONDS" {
-    type        = string
-    description = "Seconds"
+data "azurerm_virtual_network" "vnet" {
+  name                = "vnet"
+  resource_group_name = "ctos7weursgResourceLocksTF001"
 }
 
-//Random suffix for deployment
-resource "random_string" "random_suffix" {
-  length  = 8
-  special = false
-  upper   = false
+resource "azurerm_management_lock" "lock-vnet" {
+  name       = "automatic lock "
+  scope      = azurerm_virtual_network.vnet.id
+  lock_level = "ReadOnly"
+  notes      = "Lock managed by Terraform"
 }
 
 

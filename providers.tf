@@ -1,9 +1,6 @@
 terraform {
   required_providers {
-    restapi = {
-      source = "fmontezuma/restapi"
-      version = "1.14.1"
-    }
+    
     azurerm = {
       source = "hashicorp/azurerm"
     }
