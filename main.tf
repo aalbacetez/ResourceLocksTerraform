@@ -27,7 +27,7 @@ data "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_management_lock" "lock-vnet" {
-  name       = "automatic lock "
+  name       = "automaticlock "
   scope      = azurerm_virtual_network.vnet.id
   lock_level = "ReadOnly"
   notes      = "Lock managed by Terraform"
